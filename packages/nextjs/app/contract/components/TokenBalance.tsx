@@ -1,6 +1,6 @@
 "use client";
 
-import { formatEther } from "viem";
+import { formatUnits } from "viem";
 import { useAccount, useReadContract } from "wagmi";
 import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
 
@@ -10,7 +10,7 @@ const CONTRACT_ADDRESS = process.env
 export function TokenBalance() {
   const { address, isConnected } = useAccount();
 
-  const { data: balance, isLoading } = useReadContract({
+  const balanceOfResult = useReadContract({
     address: CONTRACT_ADDRESS,
     abi: buenaTokenAbi.abi as any,
     functionName: "balanceOf",
@@ -19,6 +19,8 @@ export function TokenBalance() {
       enabled: isConnected && !!address,
     },
   });
+
+  const { data: balance, isLoading } = balanceOfResult;
 
   const { data: tokenName } = useReadContract({
     address: CONTRACT_ADDRESS,
@@ -30,6 +32,12 @@ export function TokenBalance() {
     address: CONTRACT_ADDRESS,
     abi: buenaTokenAbi.abi as any,
     functionName: "symbol",
+  });
+
+  const { data: decimals } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: buenaTokenAbi.abi as any,
+    functionName: "decimals",
   });
 
   if (!isConnected) {
@@ -74,13 +82,12 @@ export function TokenBalance() {
               </div>
               <div className="stat-value text-primary text-4xl">
                 {balance
-                  ? parseFloat(formatEther(balance as bigint)).toLocaleString(
-                      undefined,
-                      {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 4,
-                      }
-                    )
+                  ? parseFloat(
+                      formatUnits(balance as bigint, decimals as number),
+                    ).toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 4,
+                    })
                   : "0.00"}
               </div>
               <div className="stat-desc">
