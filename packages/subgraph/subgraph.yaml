@@ -8,9 +8,9 @@ dataSources:
     name: BuenaToken
     network: celo-sepolia
     source:
-      address: "0xa0304b26DEb6C0D12416F4bDbB09e52e6f800A1F"
+      address: "0x416e6e330d65c89a8a6372698a9d01f2e6ec55fc"
       abi: BuenaToken
-      startBlock: 7209007
+      startBlock: 9094627
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.9
