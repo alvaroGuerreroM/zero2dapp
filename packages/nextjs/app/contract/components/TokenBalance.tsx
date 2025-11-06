@@ -43,7 +43,7 @@ export function TokenBalance() {
   if (!isConnected) {
     return (
       <div className="card bg-base-200 shadow-xl border border-base-300">
-        <div className="card-body">
+        <div className="card-body space-y-4">
           <h2 className="card-title text-2xl mb-4">💰 Token Balance</h2>
           <div className="alert alert-info">
             <svg
@@ -68,7 +68,7 @@ export function TokenBalance() {
 
   return (
     <div className="card bg-base-200 shadow-xl border border-base-300">
-      <div className="card-body">
+      <div className="card-body space-y-4">
         <h2 className="card-title text-2xl mb-4">💰 Token Balance</h2>
         {isLoading ? (
           <div className="flex justify-center py-8">

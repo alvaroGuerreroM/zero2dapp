@@ -261,22 +261,6 @@ export function ENSProfile() {
                   </p>
                 </div>
               </div>
-              {profile.socials.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {profile.socials.slice(0, 3).map((social) => (
-                    <a
-                      key={social.key}
-                      href={social.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="btn btn-sm btn-outline"
-                    >
-                      <span className="mr-1">{social.icon}</span>
-                      {social.label}
-                    </a>
-                  ))}
-                </div>
-              )}
             </div>
 
             {profile.description && (

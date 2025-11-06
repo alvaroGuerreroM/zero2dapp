@@ -144,7 +144,7 @@ export function TokenTransfer() {
   if (!isConnected) {
     return (
       <div className="card bg-base-200 shadow-xl border border-base-300">
-        <div className="card-body">
+        <div className="card-body space-y-4">
           <h2 className="card-title text-2xl mb-4">📤 Transfer Tokens</h2>
           <div className="alert alert-info">
             <svg
@@ -171,7 +171,7 @@ export function TokenTransfer() {
     <div className="space-y-6">
       {/* Transfer Tokens */}
       <div className="card bg-base-200 shadow-xl border border-base-300">
-        <div className="card-body">
+        <div className="card-body space-y-4">
           <h2 className="card-title text-2xl mb-4">📤 Transfer Tokens</h2>
           <div className="space-y-4">
             <div className="form-control">
@@ -255,7 +255,7 @@ export function TokenTransfer() {
       {/* Mint Tokens (Owner Only) */}
       {isOwner && (
         <div className="card bg-base-200 shadow-xl border border-base-300">
-          <div className="card-body">
+          <div className="card-body space-y-4">
             <h2 className="card-title text-2xl mb-4">
               🪙 Mint Tokens{" "}
               <span className="badge badge-warning">Owner Only</span>

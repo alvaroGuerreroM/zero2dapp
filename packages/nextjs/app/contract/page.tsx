@@ -81,14 +81,14 @@ export default function ContractPage() {
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-8 md:px-12 max-w-7xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* ENS Profile & Token Balance */}
+            {/* ENS Profile */}
             <div className="space-y-6">
               <ENSProfile />
-              <TokenBalance />
             </div>
 
-            {/* Token Transfer */}
+            {/* Token */}
             <div>
+              <TokenBalance />
               <TokenTransfer />
             </div>
           </div>
