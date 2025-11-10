@@ -1,4 +1,5 @@
 import { PoolInfo } from "./components/PoolInfo";
+import { SwapInterface } from "./components/SwapInterface";
 
 export default function UniswapPage() {
   return (
@@ -19,6 +20,7 @@ export default function UniswapPage() {
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto space-y-8">
           <PoolInfo />
+          <SwapInterface />
         </div>
       </div>
     </div>
