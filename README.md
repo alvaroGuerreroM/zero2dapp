@@ -61,7 +61,7 @@ Your smart contracts are located in the `contracts/` directory. Use the scripts 
 
 #### Deploying to Celo Sepolia
 
-To deploy BuenaToken to Celo Sepolia testnet:
+To deploy BuenoToken to Celo Sepolia testnet:
 
 1. **Get Testnet Tokens**
 
@@ -73,7 +73,7 @@ To deploy BuenaToken to Celo Sepolia testnet:
 
    - Open [Remix IDE](https://remix.ethereum.org/)
    - Connect your wallet (MetaMask) to Celo Sepolia testnet
-   - Upload and compile `contracts/BuenaToken.sol`
+   - Upload and compile `contracts/BuenoToken.sol`
    - Run `scripts/deploy_with_ethers.ts` in Remix
    - Copy the deployed contract address
 

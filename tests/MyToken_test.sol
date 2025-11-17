@@ -3,7 +3,7 @@
 pragma solidity >=0.7.0 <0.9.0;
 import "remix_tests.sol";
 import "remix_accounts.sol";
-import "../contracts/BuenaToken.sol";
+import "../contracts/BuenoToken.sol";
 
 contract MyTokenTest is MyToken {
 

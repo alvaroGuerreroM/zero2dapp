@@ -8,7 +8,7 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
   .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;

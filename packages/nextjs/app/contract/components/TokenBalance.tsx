@@ -2,7 +2,7 @@
 
 import { formatEther } from "viem";
 import { useAccount, useReadContract } from "wagmi";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
   .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
@@ -70,7 +70,7 @@ export function TokenBalance() {
           <div className="space-y-4">
             <div className="stat bg-base-300 rounded-lg p-6">
               <div className="stat-title">
-                {(tokenName as string) || "BuenaToken"}
+                {(tokenName as string) || "BuenoToken"}
               </div>
               <div className="stat-value text-primary text-4xl">
                 {balance

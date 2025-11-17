@@ -1,13 +1,13 @@
 # Celo Integration Guide
 
-Complete guide for deploying BuenaToken on Celo Sepolia and integrating Celo branding and contract interaction functionality.
+Complete guide for deploying BuenoToken on Celo Sepolia and integrating Celo branding and contract interaction functionality.
 
 ## 📋 Table of Contents
 
 - [Overview](#overview)
 - [What Was Changed](#what-was-changed)
 - [Getting Celo Sepolia Testnet Tokens](#getting-celo-sepolia-testnet-tokens)
-- [Deploying BuenaToken Contract](#deploying-buenatoken-contract)
+- [Deploying BuenoToken Contract](#deploying-buenotoken-contract)
 - [Environment Variables Setup](#environment-variables-setup)
 - [Frontend Contract Interaction](#frontend-contract-interaction)
 - [Celo Branding Implementation](#celo-branding-implementation)
@@ -19,7 +19,7 @@ Complete guide for deploying BuenaToken on Celo Sepolia and integrating Celo bra
 
 This integration adds:
 
-- BuenaToken contract deployment on Celo Sepolia testnet
+- BuenoToken contract deployment on Celo Sepolia testnet
 - Frontend contract interaction page (`/contract`)
 - Token balance display and transfer functionality
 - Token ownership display from subgraph data
@@ -44,7 +44,7 @@ This integration adds:
 
 1. **Deployment Scripts**
 
-   - `scripts/deploy_with_ethers.ts` - Updated to deploy BuenaToken with owner address
+   - `scripts/deploy_with_ethers.ts` - Updated to deploy BuenoToken with owner address
 
 2. **Configuration**
 
@@ -102,7 +102,7 @@ Currency Symbol: CELO
 Block Explorer: https://celo-sepolia.blockscout.com
 ```
 
-## 🚀 Deploying BuenaToken Contract
+## 🚀 Deploying BuenoToken Contract
 
 ### Prerequisites
 
@@ -123,14 +123,14 @@ Block Explorer: https://celo-sepolia.blockscout.com
 
 3. **Upload Contract**
 
-   - Create a new file or upload `contracts/BuenaToken.sol`
-   - Copy the contract code from `contracts/BuenaToken.sol`
+   - Create a new file or upload `contracts/BuenoToken.sol`
+   - Copy the contract code from `contracts/BuenoToken.sol`
 
 4. **Compile Contract**
 
    - Go to the "Solidity Compiler" tab
    - Select compiler version `0.8.27` or higher
-   - Click "Compile BuenaToken.sol"
+   - Click "Compile BuenoToken.sol"
    - Ensure compilation succeeds without errors
 
 5. **Deploy Contract**
@@ -156,7 +156,7 @@ The deployment script (`scripts/deploy_with_ethers.ts`) has been updated to auto
 import { deploy } from "./ethers-lib";
 
 /**
- * Deploy BuenaToken contract to Celo Sepolia
+ * Deploy BuenoToken contract to Celo Sepolia
  *
  * Usage:
  * - Make sure you're connected to Celo Sepolia network in Remix
@@ -168,10 +168,10 @@ import { deploy } from "./ethers-lib";
     const signer = new ethers.providers.Web3Provider(web3Provider).getSigner();
     const deployerAddress = await signer.getAddress();
 
-    console.log(`Deploying BuenaToken with owner: ${deployerAddress}`);
+    console.log(`Deploying BuenoToken with owner: ${deployerAddress}`);
 
-    const result = await deploy("BuenaToken", [deployerAddress]);
-    console.log(`✅ BuenaToken deployed successfully!`);
+    const result = await deploy("BuenoToken", [deployerAddress]);
+    console.log(`✅ BuenoToken deployed successfully!`);
     console.log(`📝 Contract Address: ${result.address}`);
     console.log(
       `🔗 Explorer: https://celo-sepolia.blockscout.com/address/${result.address}`
@@ -192,10 +192,10 @@ import { deploy } from "./ethers-lib";
 1. In Remix, go to the "File Explorer" tab
 2. Upload `scripts/deploy_with_ethers.ts`
 3. Upload `scripts/ethers-lib.ts`
-4. Make sure `artifacts/BuenaToken.json` is available (compile first)
+4. Make sure `artifacts/BuenoToken.json` is available (compile first)
 5. Run `deploy_with_ethers.ts` in the Remix console
    - The script will automatically get your connected wallet address
-   - It will deploy BuenaToken with that address as the owner
+   - It will deploy BuenoToken with that address as the owner
    - Copy the deployed contract address from the console output
 6. **Important**: Update `packages/subgraph/networks.json` with the new contract address
 7. **Important**: Update `.env.local` with `NEXT_PUBLIC_BUENA_TOKEN_ADDRESS`
@@ -205,7 +205,7 @@ import { deploy } from "./ethers-lib";
 Create a `.env.local` file in `packages/nextjs/` directory:
 
 ```bash
-# BuenaToken Contract Address
+# BuenoToken Contract Address
 NEXT_PUBLIC_BUENA_TOKEN_ADDRESS=0xYourContractAddressHere
 
 # The Graph Subgraph API
@@ -258,10 +258,10 @@ export default function ContractPage() {
         <div className="hero-content text-center">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              BuenaToken Contract
+              BuenoToken Contract
             </h1>
             <p className="text-xl opacity-80 mb-4">
-              Interact with your BuenaToken contract on Celo Sepolia
+              Interact with your BuenoToken contract on Celo Sepolia
             </p>
             {CONTRACT_ADDRESS && (
               <div className="alert alert-info max-w-2xl mx-auto">
@@ -357,7 +357,7 @@ Component that displays the connected wallet's token balance using wagmi hooks:
 
 import { useAccount, useReadContract } from "wagmi";
 import { formatEther } from "viem";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
   .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
@@ -425,7 +425,7 @@ export function TokenBalance() {
           <div className="space-y-4">
             <div className="stat bg-base-300 rounded-lg p-6">
               <div className="stat-title">
-                {(tokenName as string) || "BuenaToken"}
+                {(tokenName as string) || "BuenoToken"}
               </div>
               <div className="stat-value text-primary text-4xl">
                 {balance
@@ -468,7 +468,7 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { formatEther, parseEther, isAddress } from "viem";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
   .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
@@ -578,7 +578,7 @@ import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
   .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
@@ -950,7 +950,7 @@ After deploying and setting up:
    ```json
    {
      "celo-sepolia": {
-       "BuenaToken": {
+       "BuenoToken": {
          "address": "0xYourContractAddress",
          "startBlock": 12345678
        }
@@ -975,7 +975,7 @@ zero2dapp/
 ├── CELO.md (this file)
 ├── README.md (updated with Celo instructions)
 ├── scripts/
-│   ├── deploy_with_ethers.ts (updated for BuenaToken)
+│   ├── deploy_with_ethers.ts (updated for BuenoToken)
 │   └── ethers-lib.ts
 ├── packages/
 │   └── nextjs/
@@ -1004,7 +1004,7 @@ zero2dapp/
 Use this checklist to verify everything is set up correctly:
 
 - [ ] Celo Sepolia testnet tokens obtained
-- [ ] BuenaToken contract deployed on Celo Sepolia
+- [ ] BuenoToken contract deployed on Celo Sepolia
 - [ ] Contract address saved
 - [ ] `.env.local` file created with all required variables
 - [ ] `NEXT_PUBLIC_BUENA_TOKEN_ADDRESS` set correctly

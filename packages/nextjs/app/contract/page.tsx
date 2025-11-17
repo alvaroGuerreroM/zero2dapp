@@ -12,10 +12,10 @@ export default function ContractPage() {
         <div className="hero-content text-center">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              BuenaToken Contract
+              BuenoToken Contract
             </h1>
             <p className="text-xl opacity-80 mb-4">
-              Interact with your BuenaToken contract on Celo Sepolia
+              Interact with your BuenoToken contract on Celo Sepolia
             </p>
             {CONTRACT_ADDRESS && (
               <div className="alert alert-info max-w-2xl mx-auto">
