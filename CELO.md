@@ -180,7 +180,7 @@ import { deploy } from "./ethers-lib";
     console.log(
       `   1. Update packages/subgraph/networks.json with the new address`
     );
-    console.log(`   2. Update NEXT_PUBLIC_BUENA_TOKEN_ADDRESS in .env.local`);
+    console.log(`   2. Update NEXT_PUBLIC_BUENO_TOKEN_ADDRESS in .env.local`);
   } catch (e) {
     console.error("❌ Deployment failed:", e.message);
   }
@@ -198,7 +198,7 @@ import { deploy } from "./ethers-lib";
    - It will deploy BuenoToken with that address as the owner
    - Copy the deployed contract address from the console output
 6. **Important**: Update `packages/subgraph/networks.json` with the new contract address
-7. **Important**: Update `.env.local` with `NEXT_PUBLIC_BUENA_TOKEN_ADDRESS`
+7. **Important**: Update `.env.local` with `NEXT_PUBLIC_BUENO_TOKEN_ADDRESS`
 
 ## 🔧 Environment Variables Setup
 
@@ -206,7 +206,7 @@ Create a `.env.local` file in `packages/nextjs/` directory:
 
 ```bash
 # BuenoToken Contract Address
-NEXT_PUBLIC_BUENA_TOKEN_ADDRESS=0xYourContractAddressHere
+NEXT_PUBLIC_BUENO_TOKEN_ADDRESS=0xYourContractAddressHere
 
 # The Graph Subgraph API
 NEXT_PUBLIC_SUBGRAPH_URL=https://api.studio.thegraph.com/query/YOUR_ACCOUNT/YOUR_SUBGRAPH/version/latest
@@ -248,7 +248,7 @@ import { TokenBalance } from "./components/TokenBalance";
 import { TokenOwnership } from "./components/TokenOwnership";
 import { TokenTransfer } from "./components/TokenTransfer";
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BUENA_TOKEN_ADDRESS;
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BUENO_TOKEN_ADDRESS;
 
 export default function ContractPage() {
   return (
@@ -312,7 +312,7 @@ export default function ContractPage() {
                 <div>
                   <div className="font-bold">Contract not configured</div>
                   <div className="text-sm">
-                    Please set NEXT_PUBLIC_BUENA_TOKEN_ADDRESS in your
+                    Please set NEXT_PUBLIC_BUENO_TOKEN_ADDRESS in your
                     .env.local file
                   </div>
                 </div>
@@ -357,17 +357,17 @@ Component that displays the connected wallet's token balance using wagmi hooks:
 
 import { useAccount, useReadContract } from "wagmi";
 import { formatEther } from "viem";
-import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 
 export function TokenBalance() {
   const { address, isConnected } = useAccount();
 
   const { data: balance, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     query: {
@@ -377,13 +377,13 @@ export function TokenBalance() {
 
   const { data: tokenName } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "name",
   });
 
   const { data: tokenSymbol } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "symbol",
   });
 
@@ -468,10 +468,10 @@ import {
   useWaitForTransactionReceipt,
 } from "wagmi";
 import { formatEther, parseEther, isAddress } from "viem";
-import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 
 export function TokenTransfer() {
   const { address, isConnected } = useAccount();
@@ -507,7 +507,7 @@ export function TokenTransfer() {
   // Check if user is owner
   const { data: owner } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "owner",
   });
 
@@ -530,7 +530,7 @@ export function TokenTransfer() {
     try {
       transfer({
         address: CONTRACT_ADDRESS,
-        abi: buenaTokenAbi.abi as any,
+        abi: buenoTokenAbi.abi as any,
         functionName: "transfer",
         args: [recipient as `0x${string}`, parseEther(amount)],
       });
@@ -553,7 +553,7 @@ export function TokenTransfer() {
     try {
       mint({
         address: CONTRACT_ADDRESS,
-        abi: buenaTokenAbi.abi as any,
+        abi: buenoTokenAbi.abi as any,
         functionName: "mint",
         args: [mintRecipient as `0x${string}`, parseEther(mintAmount)],
       });
@@ -578,10 +578,10 @@ import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
-import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 const SUBGRAPH_URL = process.env.NEXT_PUBLIC_SUBGRAPH_URL || "";
 const SUBGRAPH_API_KEY = process.env.NEXT_PUBLIC_GRAPH_API_KEY;
 
@@ -854,7 +854,7 @@ Added Contract navigation link:
 **Solutions**:
 
 - Verify `.env.local` exists in `packages/nextjs/` directory
-- Check `NEXT_PUBLIC_BUENA_TOKEN_ADDRESS` is set correctly
+- Check `NEXT_PUBLIC_BUENO_TOKEN_ADDRESS` is set correctly
 - Restart development server after adding/changing environment variables
 - Ensure contract address starts with `0x` and is 42 characters long
 
@@ -1007,7 +1007,7 @@ Use this checklist to verify everything is set up correctly:
 - [ ] BuenoToken contract deployed on Celo Sepolia
 - [ ] Contract address saved
 - [ ] `.env.local` file created with all required variables
-- [ ] `NEXT_PUBLIC_BUENA_TOKEN_ADDRESS` set correctly
+- [ ] `NEXT_PUBLIC_BUENO_TOKEN_ADDRESS` set correctly
 - [ ] Subgraph deployed and synced
 - [ ] `NEXT_PUBLIC_SUBGRAPH_URL` set correctly
 - [ ] `packages/subgraph/networks.json` updated with contract address

@@ -2,17 +2,17 @@
 
 import { formatEther } from "viem";
 import { useAccount, useReadContract } from "wagmi";
-import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 
 export function TokenBalance() {
   const { address, isConnected } = useAccount();
 
   const { data: balance, isLoading } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     query: {
@@ -22,13 +22,13 @@ export function TokenBalance() {
 
   const { data: tokenName } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "name",
   });
 
   const { data: tokenSymbol } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "symbol",
   });
 

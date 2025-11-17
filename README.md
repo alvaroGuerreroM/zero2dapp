@@ -80,7 +80,7 @@ To deploy BuenoToken to Celo Sepolia testnet:
 3. **Update Environment Variables**
 
    - Copy `.env.local.example` to `.env.local` in `packages/nextjs/`
-   - Set `NEXT_PUBLIC_BUENA_TOKEN_ADDRESS` to your deployed contract address
+   - Set `NEXT_PUBLIC_BUENO_TOKEN_ADDRESS` to your deployed contract address
 
 4. **Update Subgraph**
    - Update `packages/subgraph/networks.json` with your contract address

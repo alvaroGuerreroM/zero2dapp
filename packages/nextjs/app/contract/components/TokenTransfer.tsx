@@ -8,10 +8,10 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import buenaTokenAbi from "../../../../../artifacts/BuenoToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 
 export function TokenTransfer() {
   const { address, isConnected } = useAccount();
@@ -48,7 +48,7 @@ export function TokenTransfer() {
   // Check if user is owner
   const { data: owner } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "owner",
   });
 
@@ -71,7 +71,7 @@ export function TokenTransfer() {
     try {
       transfer({
         address: CONTRACT_ADDRESS,
-        abi: buenaTokenAbi.abi as any,
+        abi: buenoTokenAbi.abi as any,
         functionName: "transfer",
         args: [recipient as `0x${string}`, parseEther(amount)],
       });
@@ -94,7 +94,7 @@ export function TokenTransfer() {
     try {
       mint({
         address: CONTRACT_ADDRESS,
-        abi: buenaTokenAbi.abi as any,
+        abi: buenoTokenAbi.abi as any,
         functionName: "mint",
         args: [mintRecipient as `0x${string}`, parseEther(mintAmount)],
       });

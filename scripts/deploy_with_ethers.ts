@@ -30,7 +30,7 @@ import { deploy } from "./ethers-lib";
     console.log(
       `   1. Update packages/subgraph/networks.json with the new address`
     );
-    console.log(`   2. Update NEXT_PUBLIC_BUENA_TOKEN_ADDRESS in .env.local`);
+    console.log(`   2. Update NEXT_PUBLIC_BUENO_TOKEN_ADDRESS in .env.local`);
   } catch (e) {
     console.error("❌ Deployment failed:", e.message);
   }

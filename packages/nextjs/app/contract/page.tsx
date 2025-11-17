@@ -2,7 +2,7 @@ import { TokenBalance } from "./components/TokenBalance";
 import { TokenOwnership } from "./components/TokenOwnership";
 import { TokenTransfer } from "./components/TokenTransfer";
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BUENA_TOKEN_ADDRESS;
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BUENO_TOKEN_ADDRESS;
 
 export default function ContractPage() {
   return (
@@ -66,7 +66,7 @@ export default function ContractPage() {
                 <div>
                   <div className="font-bold">Contract not configured</div>
                   <div className="text-sm">
-                    Please set NEXT_PUBLIC_BUENA_TOKEN_ADDRESS in your
+                    Please set NEXT_PUBLIC_BUENO_TOKEN_ADDRESS in your
                     .env.local file
                   </div>
                 </div>
