@@ -37,7 +37,7 @@ export default function Page() {
       <section className="py-24 md:py-32 bg-base-100">
         <div className="container mx-auto px-8 md:px-12 max-w-6xl">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            What's Included
+            What&apos;s Included
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -72,7 +72,7 @@ export default function Page() {
                 <h3 className="card-title text-2xl mb-3">Multi-Chain</h3>
                 <p className="text-base opacity-70 leading-relaxed">
                   Supports Ethereum, Polygon, Arbitrum, Optimism, Base, Celo,
-                  and testnets including Sepolia, Celo Alfajores, and Celo
+                  and testnets including Sepolia, and Celo
                   Sepolia.
                 </p>
               </div>

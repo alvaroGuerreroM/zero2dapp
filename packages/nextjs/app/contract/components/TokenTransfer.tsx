@@ -8,13 +8,13 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 import { normalize } from "viem/ens";
 import { getEnsAddress } from "viem/actions";
 import { mainnetEnsClient } from "../../lib/ensClient";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 
 const hasENSShape = (input: string) => input.includes(".") && input.length > 2;
 
@@ -53,7 +53,7 @@ export function TokenTransfer() {
   // Check if user is owner
   const { data: owner } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "owner",
   });
 
@@ -96,7 +96,7 @@ export function TokenTransfer() {
     try {
       transfer({
         address: CONTRACT_ADDRESS,
-        abi: buenaTokenAbi.abi as any,
+        abi: buenoTokenAbi.abi as any,
         functionName: "transfer",
         args: [resolvedRecipient as `0x${string}`, parseEther(amount)],
       });
@@ -119,7 +119,7 @@ export function TokenTransfer() {
     try {
       mint({
         address: CONTRACT_ADDRESS,
-        abi: buenaTokenAbi.abi as any,
+        abi: buenoTokenAbi.abi as any,
         functionName: "mint",
         args: [mintRecipient as `0x${string}`, parseEther(mintAmount)],
       });

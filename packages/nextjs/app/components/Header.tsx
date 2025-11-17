@@ -1,6 +1,7 @@
 "use client";
 
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
 
 export function Header() {
   return (
@@ -12,19 +13,19 @@ export function Header() {
               <span className="text-2xl font-bold">Z</span>
             </div>
           </div>
-          <a href="/" className="btn btn-ghost text-2xl font-bold normal-case">
+          <Link href="/" className="btn btn-ghost text-2xl font-bold normal-case">
             ZeroToDapp
-          </a>
+          </Link>
         </div>
       </div>
 
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 gap-2">
           <li>
-            <a href="/">Home</a>
+            <Link href="/">Home</Link>
           </li>
           <li>
-            <a href="/subgraph">Subgraph</a>
+            <Link href="/subgraph">Subgraph</Link>
           </li>
           <li>
             <a href="/contract">Contract</a>

@@ -1,13 +1,15 @@
 import {
   Approval as ApprovalEvent,
-  EIP712DomainChanged as EIP712DomainChangedEvent,
-  OwnershipTransferred as OwnershipTransferredEvent,
+  RoleAdminChanged as RoleAdminChangedEvent,
+  RoleGranted as RoleGrantedEvent,
+  RoleRevoked as RoleRevokedEvent,
   Transfer as TransferEvent
-} from "../generated/BuenaToken/BuenaToken"
+} from "../generated/BuenoToken/BuenoToken"
 import {
   Approval,
-  EIP712DomainChanged,
-  OwnershipTransferred,
+  RoleAdminChanged,
+  RoleGranted,
+  RoleRevoked,
   Transfer
 } from "../generated/schema"
 
@@ -26,12 +28,15 @@ export function handleApproval(event: ApprovalEvent): void {
   entity.save()
 }
 
-export function handleEIP712DomainChanged(
-  event: EIP712DomainChangedEvent
+export function handleRoleAdminChanged(
+  event: RoleAdminChangedEvent
 ): void {
-  let entity = new EIP712DomainChanged(
+  let entity = new RoleAdminChanged(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
+  entity.role = event.params.role
+  entity.previousAdminRole = event.params.previousAdminRole
+  entity.newAdminRole = event.params.newAdminRole
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp
@@ -40,14 +45,32 @@ export function handleEIP712DomainChanged(
   entity.save()
 }
 
-export function handleOwnershipTransferred(
-  event: OwnershipTransferredEvent
+export function handleRoleGranted(
+  event: RoleGrantedEvent
 ): void {
-  let entity = new OwnershipTransferred(
+  let entity = new RoleGranted(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   )
-  entity.previousOwner = event.params.previousOwner
-  entity.newOwner = event.params.newOwner
+  entity.role = event.params.role
+  entity.account = event.params.account
+  entity.sender = event.params.sender
+
+  entity.blockNumber = event.block.number
+  entity.blockTimestamp = event.block.timestamp
+  entity.transactionHash = event.transaction.hash
+
+  entity.save()
+}
+
+export function handleRoleRevoked(
+  event: RoleRevokedEvent
+): void {
+  let entity = new RoleRevoked(
+    event.transaction.hash.concatI32(event.logIndex.toI32())
+  )
+  entity.role = event.params.role
+  entity.account = event.params.account
+  entity.sender = event.params.sender
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

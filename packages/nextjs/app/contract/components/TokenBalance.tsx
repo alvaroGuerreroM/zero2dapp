@@ -9,10 +9,10 @@ import {
   useReadContract,
 } from "wagmi";
 import { mainnet } from "wagmi/chains";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 
 const mainnetEnsConfig = createConfig({
   chains: [mainnet],
@@ -37,7 +37,7 @@ export function TokenBalance() {
 
   const balanceOfResult = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     query: {
@@ -49,19 +49,19 @@ export function TokenBalance() {
 
   const { data: tokenName } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "name",
   });
 
   const { data: tokenSymbol } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "symbol",
   });
 
   const { data: decimals } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "decimals",
   });
 
@@ -103,7 +103,7 @@ export function TokenBalance() {
           <div className="space-y-4">
             <div className="stat bg-base-300 rounded-lg p-6">
               <div className="stat-title">
-                {(tokenName as string) || "BuenaToken"}
+                {(tokenName as string) || "BuenoToken"}
               </div>
               <div className="stat-value text-primary text-4xl">
                 {balance

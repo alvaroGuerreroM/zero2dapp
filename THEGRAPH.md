@@ -1,13 +1,36 @@
-# The Graph Integration Guide
+# The Graph Integration Guide - BuenoToken Workshop
 
-This guide will walk you through deploying a subgraph to The Graph and integrating it with your Next.js application to fetch and display blockchain data.
+This guide will walk you through deploying a subgraph to The Graph Studio and integrating it with your Next.js application.
+
+> 💡 **Need help?** The complete solution is available on the [`the-graph-solved`](https://github.com/ryestew/zero2dapp/tree/the-graph-solved) branch.
+
+## 🎯 Workshop Overview
+
+You have a **BuenoToken** contract deployed on Celo mainnet that uses **AccessControl** for role-based permissions. The subgraph configuration is already set up correctly to index the contract's events.
+
+**Your mission**: Deploy the subgraph to The Graph Studio and implement the frontend to display the indexed data.
+
+## 📝 Contract Information
+
+- **Contract**: BuenoToken (AccessControl-based)
+- **Address**: `0xCFA45ECA955dd195b5b5Fc0E40d1A1B06f16793C`
+- **Network**: Celo Mainnet
+- **Block Explorer**: https://celoscan.io/address/0xCFA45ECA955dd195b5b5Fc0E40d1A1B06f16793C
+- **Start Block**: `50636395`
+
+### Events Being Indexed
+
+- `RoleGranted` - when a role is granted to an account
+- `RoleRevoked` - when a role is revoked from an account
+- `RoleAdminChanged` - when a role's admin is changed
+- `Transfer` - standard ERC20 transfer
+- `Approval` - standard ERC20 approval
 
 ## 📦 Prerequisites
 
-1. A deployed smart contract on a blockchain (Ethereum, Polygon, Celo, etc.)
-2. Your contract's address and ABI
-3. [The Graph CLI](https://github.com/graphprotocol/graph-cli) installed globally
-4. A [Subgraph Studio](https://thegraph.com/studio/) account
+1. [The Graph CLI](https://github.com/graphprotocol/graph-cli) installed globally
+2. A [Subgraph Studio](https://thegraph.com/studio/) account
+3. Basic understanding of GraphQL and The Graph protocol
 
 ## 📋 Part 1: Deploy Your Subgraph
 
@@ -19,153 +42,38 @@ If you haven't already, install The Graph CLI globally:
 npm install -g @graphprotocol/graph-cli
 ```
 
-### Step 1: Initialize Your Subgraph
+### Step 1: Review the Subgraph Configuration
 
-Navigate to the subgraph package in this monorepo:
+The subgraph is already configured in `packages/subgraph/`. Let's review what's set up:
+
+**`subgraph.yaml`** - Main configuration:
+
+- Points to BuenoToken contract on Celo mainnet
+- Defines all AccessControl and ERC20 events to index
+- Maps events to handler functions
+
+**`schema.graphql`** - Data schema:
+
+- Defines entity types for all events
+- Each entity includes transaction and block metadata
+
+**`src/bueno-token.ts`** - Event handlers:
+
+- Processes each event and saves it to the subgraph database
+- Transforms blockchain data into queryable entities
+
+### Step 2: Generate TypeScript Types
+
+Navigate to the subgraph directory and generate the TypeScript types:
 
 ```bash
 cd packages/subgraph
-```
-
-Initialize a new subgraph:
-
-```bash
-graph init
-```
-
-You'll be prompted to provide:
-
-- **Protocol**: Choose your blockchain (ethereum, polygon, celo, etc.)
-- **Subgraph name**: Choose a name for your subgraph
-- **Directory**: Press enter to use the current directory
-- **Ethereum network**: Choose your network (mainnet, sepolia, celo-alfajores, etc.)
-- **Contract address**: Enter your deployed smart contract address
-- **Start block** (optional): The block number where your contract was deployed (for faster syncing)
-- **Contract name**: A name to reference your contract in the code
-- **Index events as entities**: Yes (recommended)
-
-This will generate the following files:
-
-- `subgraph.yaml` - Main configuration file
-- `schema.graphql` - GraphQL schema defining your entities
-- `src/mapping.ts` - Event handlers
-- `networks.json` - Network configurations
-
-### Step 2: Update Your Contract Address
-
-If you need to change the contract address later, edit `subgraph.yaml`:
-
-```yaml
-dataSources:
-  - kind: ethereum
-    name: YourContract
-    network: celo-alfajores # or your chosen network
-    source:
-      address: "0xYourContractAddress" # Update this with your contract address
-      abi: YourContract
-      startBlock: 12345678 # Optional: block number when contract was deployed
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Transfer
-        - Approval
-      abis:
-        - name: YourContract
-          file: ./abis/YourContract.json
-      eventHandlers:
-        - event: Transfer(indexed address,indexed address,uint256)
-          handler: handleTransfer
-        - event: Approval(indexed address,indexed address,uint256)
-          handler: handleApproval
-      file: ./src/mapping.ts
-```
-
-### Step 3: Define Your Schema
-
-Edit `schema.graphql` to define the entities you want to index. For example:
-
-```graphql
-type Transfer @entity {
-  id: ID!
-  from: Bytes!
-  to: Bytes!
-  value: BigInt!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Approval @entity {
-  id: ID!
-  owner: Bytes!
-  spender: Bytes!
-  value: BigInt!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type OwnershipTransferred @entity {
-  id: ID!
-  previousOwner: Bytes!
-  newOwner: Bytes!
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-```
-
-### Step 4: Generate Code
-
-After defining your schema, generate TypeScript types:
-
-```bash
 graph codegen
 ```
 
 This creates type definitions in `generated/` that you'll use in your mappings.
 
-### Step 5: Write Event Handlers
-
-Update `src/mapping.ts` with your event handlers:
-
-```typescript
-import {
-  Transfer as TransferEvent,
-  Approval as ApprovalEvent,
-} from "../generated/YourContract/YourContract";
-import { Transfer, Approval } from "../generated/schema";
-
-export function handleTransfer(event: TransferEvent): void {
-  let entity = new Transfer(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  );
-  entity.from = event.params.from;
-  entity.to = event.params.to;
-  entity.value = event.params.value;
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-  entity.save();
-}
-
-export function handleApproval(event: ApprovalEvent): void {
-  let entity = new Approval(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  );
-  entity.owner = event.params.owner;
-  entity.spender = event.params.spender;
-  entity.value = event.params.value;
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-  entity.save();
-}
-```
-
-### Step 6: Create a Subgraph in Studio
+### Step 3: Create a Subgraph in Studio
 
 1. Go to [Subgraph Studio](https://thegraph.com/studio/)
 2. Connect your wallet
@@ -173,7 +81,7 @@ export function handleApproval(event: ApprovalEvent): void {
 4. Choose a name for your subgraph
 5. Copy the deploy command shown in the studio
 
-### Step 7: Authenticate with Studio
+### Step 4: Authenticate with Studio
 
 Replace `<DEPLOY_KEY>` with your deploy key from Subgraph Studio:
 
@@ -181,7 +89,7 @@ Replace `<DEPLOY_KEY>` with your deploy key from Subgraph Studio:
 graph auth --studio <DEPLOY_KEY>
 ```
 
-### Step 8: Build Your Subgraph
+### Step 5: Build Your Subgraph
 
 Compile your subgraph:
 
@@ -191,7 +99,7 @@ graph build
 
 Fix any errors that appear before proceeding.
 
-### Step 9: Deploy to Studio
+### Step 6: Deploy to Studio
 
 Replace `<SUBGRAPH_NAME>` with your subgraph's name from Studio:
 
@@ -201,7 +109,7 @@ graph deploy --studio <SUBGRAPH_NAME>
 
 You'll be prompted to choose a version label (e.g., `v0.0.1`).
 
-### Step 10: Monitor Syncing
+### Step 7: Monitor Syncing
 
 After deployment:
 
@@ -216,7 +124,7 @@ The API URL will look like:
 https://api.studio.thegraph.com/query/<ACCOUNT_ID>/<SUBGRAPH_NAME>/version/latest
 ```
 
-### Step 11: Test Your Subgraph
+### Step 8: Test Your Subgraph
 
 Use the Playground in Subgraph Studio to test queries:
 
@@ -228,11 +136,27 @@ Use the Playground in Subgraph Studio to test queries:
     to
     value
     blockNumber
+    blockTimestamp
+  }
+  roleGranteds(first: 5) {
+    id
+    role
+    account
+    sender
+    blockNumber
+  }
+  roleRevokeds(first: 5) {
+    id
+    role
+    account
+    sender
   }
 }
 ```
 
 Once you see data returning, your subgraph is ready to integrate with the frontend!
+
+**Note**: BuenoToken uses 2 decimals, so token values need to be divided by 100, not 1e18!
 
 ---
 
@@ -359,32 +283,47 @@ import { gql, request } from "graphql-request";
 
 const query = gql`
   {
-    transfers(first: 10) {
+    transfers(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      to
-      transactionHash
-      value
       from
-      blockTimestamp
-      blockNumber
-    }
-    ownershipTransferreds(first: 10) {
+      to
+      value
       blockNumber
       blockTimestamp
-      id
-      newOwner
       transactionHash
-      previousOwner
     }
-    approvals(first: 5) {
+    approvals(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
       owner
       spender
       value
+      blockNumber
+      blockTimestamp
       transactionHash
     }
-    eip712DomainChangeds(first: 5) {
+    roleGranteds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
+      role
+      account
+      sender
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+    roleRevokeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      role
+      account
+      sender
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+    roleAdminChangeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      role
+      previousAdminRole
+      newAdminRole
       blockNumber
       blockTimestamp
       transactionHash
@@ -393,7 +332,7 @@ const query = gql`
 `;
 
 const url = process.env.NEXT_PUBLIC_SUBGRAPH_URL || "";
-const headers = process.env.NEXT_PUBLIC_GRAPH_API_KEY
+const headers: Record<string, string> = process.env.NEXT_PUBLIC_GRAPH_API_KEY
   ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_GRAPH_API_KEY}` }
   : {};
 
@@ -442,6 +381,14 @@ export default function SubgraphData() {
     return new Date(parseInt(timestamp) * 1000).toLocaleString();
   };
 
+  const formatRole = (role: string) => {
+    const roleNames: { [key: string]: string } = {
+      "0x0000000000000000000000000000000000000000000000000000000000000000": "DEFAULT_ADMIN",
+      "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6": "MINTER_ROLE",
+    };
+    return roleNames[role] || `${role.slice(0, 10)}...${role.slice(-8)}`;
+  };
+
   return (
     <div className="space-y-12">
       {/* Transfers */}
@@ -470,7 +417,7 @@ export default function SubgraphData() {
                       {formatAddress(transfer.to)}
                     </td>
                     <td className="font-semibold">
-                      {(parseInt(transfer.value) / 1e18).toFixed(4)}
+                      {(parseInt(transfer.value) / 100).toFixed(2)} BTK
                     </td>
                     <td>{transfer.blockNumber}</td>
                     <td className="font-mono text-sm">
@@ -492,46 +439,97 @@ export default function SubgraphData() {
         </div>
       </div>
 
-      {/* Ownership Transferred */}
+      {/* Roles Granted */}
       <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body p-8">
-          <h2 className="card-title text-3xl mb-6">👑 Ownership Transfers</h2>
+          <h2 className="card-title text-3xl mb-6">✨ Roles Granted</h2>
           <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
               <thead>
                 <tr>
-                  <th>Previous Owner</th>
-                  <th>New Owner</th>
+                  <th>Role</th>
+                  <th>Account</th>
+                  <th>Sender</th>
                   <th>Block</th>
                   <th>Transaction</th>
                   <th>Timestamp</th>
                 </tr>
               </thead>
               <tbody>
-                {data?.ownershipTransferreds?.map((transfer: any) => (
-                  <tr key={transfer.id}>
+                {data?.roleGranteds?.map((event: any) => (
+                  <tr key={event.id}>
                     <td className="font-mono text-sm">
-                      {formatAddress(transfer.previousOwner)}
+                      {formatRole(event.role)}
                     </td>
                     <td className="font-mono text-sm">
-                      {formatAddress(transfer.newOwner)}
+                      {formatAddress(event.account)}
                     </td>
-                    <td>{transfer.blockNumber}</td>
                     <td className="font-mono text-sm">
-                      {formatAddress(transfer.transactionHash)}
+                      {formatAddress(event.sender)}
+                    </td>
+                    <td>{event.blockNumber}</td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.transactionHash)}
                     </td>
                     <td className="text-sm opacity-70">
-                      {formatTimestamp(transfer.blockTimestamp)}
+                      {formatTimestamp(event.blockTimestamp)}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          {(!data?.ownershipTransferreds ||
-            data.ownershipTransferreds.length === 0) && (
+          {(!data?.roleGranteds || data.roleGranteds.length === 0) && (
             <div className="text-center py-8 opacity-60">
-              <p>No ownership transfers found</p>
+              <p>No roles granted found</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Roles Revoked */}
+      <div className="card bg-base-200 shadow-xl border border-base-300">
+        <div className="card-body p-8">
+          <h2 className="card-title text-3xl mb-6">🚫 Roles Revoked</h2>
+          <div className="overflow-x-auto">
+            <table className="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Account</th>
+                  <th>Sender</th>
+                  <th>Block</th>
+                  <th>Transaction</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.roleRevokeds?.map((event: any) => (
+                  <tr key={event.id}>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.role)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.account)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.sender)}
+                    </td>
+                    <td>{event.blockNumber}</td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.transactionHash)}
+                    </td>
+                    <td className="text-sm opacity-70">
+                      {formatTimestamp(event.blockTimestamp)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {(!data?.roleRevokeds || data.roleRevokeds.length === 0) && (
+            <div className="text-center py-8 opacity-60">
+              <p>No roles revoked found</p>
             </div>
           )}
         </div>
@@ -561,7 +559,7 @@ export default function SubgraphData() {
                       {formatAddress(approval.spender)}
                     </td>
                     <td className="font-semibold">
-                      {(parseInt(approval.value) / 1e18).toFixed(4)}
+                      {(parseInt(approval.value) / 100).toFixed(2)} BTK
                     </td>
                     <td className="font-mono text-sm">
                       {formatAddress(approval.transactionHash)}
@@ -579,24 +577,34 @@ export default function SubgraphData() {
         </div>
       </div>
 
-      {/* EIP712 Domain Changed */}
+      {/* Role Admin Changed */}
       <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body p-8">
-          <h2 className="card-title text-3xl mb-6">🔐 EIP712 Domain Changes</h2>
+          <h2 className="card-title text-3xl mb-6">🔐 Role Admin Changes</h2>
           <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>Role</th>
+                  <th>Previous Admin</th>
+                  <th>New Admin</th>
                   <th>Block</th>
                   <th>Transaction</th>
                   <th>Timestamp</th>
                 </tr>
               </thead>
               <tbody>
-                {data?.eip712DomainChangeds?.map((event: any) => (
+                {data?.roleAdminChangeds?.map((event: any) => (
                   <tr key={event.id}>
-                    <td className="font-mono text-sm">{event.id}</td>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.role)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.previousAdminRole)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.newAdminRole)}
+                    </td>
                     <td>{event.blockNumber}</td>
                     <td className="font-mono text-sm">
                       {formatAddress(event.transactionHash)}
@@ -609,10 +617,9 @@ export default function SubgraphData() {
               </tbody>
             </table>
           </div>
-          {(!data?.eip712DomainChangeds ||
-            data.eip712DomainChangeds.length === 0) && (
+          {(!data?.roleAdminChangeds || data.roleAdminChangeds.length === 0) && (
             <div className="text-center py-8 opacity-60">
-              <p>No domain changes found</p>
+              <p>No role admin changes found</p>
             </div>
           )}
         </div>
@@ -637,32 +644,47 @@ import SubgraphData from "./components/SubgraphData";
 
 const query = gql`
   {
-    transfers(first: 10) {
+    transfers(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      to
-      transactionHash
-      value
       from
-      blockTimestamp
-      blockNumber
-    }
-    ownershipTransferreds(first: 10) {
+      to
+      value
       blockNumber
       blockTimestamp
-      id
-      newOwner
       transactionHash
-      previousOwner
     }
-    approvals(first: 5) {
+    approvals(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
       owner
       spender
       value
+      blockNumber
+      blockTimestamp
       transactionHash
     }
-    eip712DomainChangeds(first: 5) {
+    roleGranteds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
+      role
+      account
+      sender
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+    roleRevokeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      role
+      account
+      sender
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+    roleAdminChangeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      role
+      previousAdminRole
+      newAdminRole
       blockNumber
       blockTimestamp
       transactionHash
@@ -671,7 +693,7 @@ const query = gql`
 `;
 
 const url = process.env.NEXT_PUBLIC_SUBGRAPH_URL || "";
-const headers = process.env.NEXT_PUBLIC_GRAPH_API_KEY
+const headers: Record<string, string> = process.env.NEXT_PUBLIC_GRAPH_API_KEY
   ? { Authorization: `Bearer ${process.env.NEXT_PUBLIC_GRAPH_API_KEY}` }
   : {};
 
@@ -750,7 +772,7 @@ const query = gql`
 
 export async function GET() {
   const url = process.env.SUBGRAPH_URL!; // Server-side only!
-  const headers = process.env.GRAPH_API_KEY
+  const headers: Record<string, string> = process.env.GRAPH_API_KEY
     ? { Authorization: `Bearer ${process.env.GRAPH_API_KEY}` }
     : {};
 

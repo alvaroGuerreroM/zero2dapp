@@ -3,7 +3,7 @@ import { TokenBalance } from "./components/TokenBalance";
 import { TokenOwnership } from "./components/TokenOwnership";
 import { TokenTransfer } from "./components/TokenTransfer";
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BUENA_TOKEN_ADDRESS;
+const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_BUENO_TOKEN_ADDRESS;
 
 export default function ContractPage() {
   return (
@@ -13,10 +13,10 @@ export default function ContractPage() {
         <div className="hero-content text-center">
           <div className="max-w-3xl">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              BuenaToken Contract
+              BuenoToken Contract
             </h1>
             <p className="text-xl opacity-80 mb-4">
-              Interact with your BuenaToken contract on Celo Sepolia
+              Interact with your BuenoToken contract on Celo Sepolia
             </p>
             {CONTRACT_ADDRESS && (
               <div className="alert alert-info max-w-2xl mx-auto">
@@ -39,7 +39,7 @@ export default function ContractPage() {
                     {CONTRACT_ADDRESS}
                   </div>
                   <a
-                    href={`https://celo-sepolia.blockscout.com/address/${CONTRACT_ADDRESS}`}
+                    href={`https://celo.blockscout.com/address/${CONTRACT_ADDRESS}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="link link-primary text-sm mt-2 inline-block"
@@ -67,7 +67,7 @@ export default function ContractPage() {
                 <div>
                   <div className="font-bold">Contract not configured</div>
                   <div className="text-sm">
-                    Please set NEXT_PUBLIC_BUENA_TOKEN_ADDRESS in your
+                    Please set NEXT_PUBLIC_BUENO_TOKEN_ADDRESS in your
                     .env.local file
                   </div>
                 </div>

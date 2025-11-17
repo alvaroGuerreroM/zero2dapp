@@ -67,7 +67,7 @@ graph init \
   --studio \
   --from-contract YOUR_CONTRACT_ADDRESS \
   --network sepolia \
-  --contract-name BuenaToken
+  --contract-name BuenoToken
 ```
 
 **Option B: Interactive setup**

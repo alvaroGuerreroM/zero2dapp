@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { gql, request } from "graphql-request";
 import { formatEther } from "viem";
 import { useReadContract } from "wagmi";
-import buenaTokenAbi from "../../../../../artifacts/BuenaToken.json";
+import buenoTokenAbi from "../../../../../artifacts/BuenoToken.json";
 
 const CONTRACT_ADDRESS = process.env
-  .NEXT_PUBLIC_BUENA_TOKEN_ADDRESS as `0x${string}`;
+  .NEXT_PUBLIC_BUENO_TOKEN_ADDRESS as `0x${string}`;
 const SUBGRAPH_URL = process.env.NEXT_PUBLIC_SUBGRAPH_URL || "";
 const SUBGRAPH_API_KEY = process.env.NEXT_PUBLIC_GRAPH_API_KEY;
 
@@ -247,7 +247,7 @@ function TokenBalanceRow({
 }) {
   const { data: currentBalance } = useReadContract({
     address: CONTRACT_ADDRESS,
-    abi: buenaTokenAbi.abi as any,
+    abi: buenoTokenAbi.abi as any,
     functionName: "balanceOf",
     args: [balance.address as `0x${string}`],
   });
@@ -261,7 +261,7 @@ function TokenBalanceRow({
       <td className="font-bold">#{rank}</td>
       <td className="font-mono text-sm">
         <a
-          href={`https://celo-sepolia.blockscout.com/address/${balance.address}`}
+          href={`https://celo.blockscout.com/address/${balance.address}`}
           target="_blank"
           rel="noopener noreferrer"
           className="link link-primary"

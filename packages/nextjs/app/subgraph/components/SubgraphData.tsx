@@ -5,32 +5,47 @@ import { gql, request } from "graphql-request";
 
 const query = gql`
   {
-    transfers(first: 10) {
+    transfers(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
-      to
-      transactionHash
-      value
       from
-      blockTimestamp
-      blockNumber
-    }
-    ownershipTransferreds(first: 10) {
+      to
+      value
       blockNumber
       blockTimestamp
-      id
-      newOwner
       transactionHash
-      previousOwner
     }
-    approvals(first: 5) {
+    approvals(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
       owner
       spender
       value
+      blockNumber
+      blockTimestamp
       transactionHash
     }
-    eip712DomainChangeds(first: 5) {
+    roleGranteds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
       id
+      role
+      account
+      sender
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+    roleRevokeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      role
+      account
+      sender
+      blockNumber
+      blockTimestamp
+      transactionHash
+    }
+    roleAdminChangeds(first: 10, orderBy: blockTimestamp, orderDirection: desc) {
+      id
+      role
+      previousAdminRole
+      newAdminRole
       blockNumber
       blockTimestamp
       transactionHash
@@ -50,14 +65,6 @@ export default function SubgraphData() {
       return await request(url, query, {}, headers);
     },
   });
-
-  const formatAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
-  const formatTimestamp = (timestamp: string) => {
-    return new Date(parseInt(timestamp) * 1000).toLocaleString();
-  };
 
   if (isLoading) {
     return (
@@ -83,10 +90,28 @@ export default function SubgraphData() {
             d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
           />
         </svg>
-        <span>Error loading data: {(error as Error).message}</span>
+        <span>Error loading data: {error.message}</span>
       </div>
     );
   }
+
+  const formatAddress = (address: string) => {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
+
+  const formatTimestamp = (timestamp: string) => {
+    return new Date(parseInt(timestamp) * 1000).toLocaleString();
+  };
+
+  const formatRole = (role: string) => {
+    const roleNames: { [key: string]: string } = {
+      "0x0000000000000000000000000000000000000000000000000000000000000000":
+        "DEFAULT_ADMIN",
+      "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6":
+        "MINTER_ROLE",
+    };
+    return roleNames[role] || `${role.slice(0, 10)}...${role.slice(-8)}`;
+  };
 
   return (
     <div className="space-y-12">
@@ -116,7 +141,7 @@ export default function SubgraphData() {
                       {formatAddress(transfer.to)}
                     </td>
                     <td className="font-semibold">
-                      {(parseInt(transfer.value) / 1e18).toFixed(4)}
+                      {(parseInt(transfer.value) / 100).toFixed(2)} BTK
                     </td>
                     <td>{transfer.blockNumber}</td>
                     <td className="font-mono text-sm">
@@ -138,46 +163,97 @@ export default function SubgraphData() {
         </div>
       </div>
 
-      {/* Ownership Transferred */}
+      {/* Roles Granted */}
       <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body p-8">
-          <h2 className="card-title text-3xl mb-6">👑 Ownership Transfers</h2>
+          <h2 className="card-title text-3xl mb-6">✨ Roles Granted</h2>
           <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
               <thead>
                 <tr>
-                  <th>Previous Owner</th>
-                  <th>New Owner</th>
+                  <th>Role</th>
+                  <th>Account</th>
+                  <th>Sender</th>
                   <th>Block</th>
                   <th>Transaction</th>
                   <th>Timestamp</th>
                 </tr>
               </thead>
               <tbody>
-                {data?.ownershipTransferreds?.map((transfer: any) => (
-                  <tr key={transfer.id}>
+                {data?.roleGranteds?.map((event: any) => (
+                  <tr key={event.id}>
                     <td className="font-mono text-sm">
-                      {formatAddress(transfer.previousOwner)}
+                      {formatRole(event.role)}
                     </td>
                     <td className="font-mono text-sm">
-                      {formatAddress(transfer.newOwner)}
+                      {formatAddress(event.account)}
                     </td>
-                    <td>{transfer.blockNumber}</td>
                     <td className="font-mono text-sm">
-                      {formatAddress(transfer.transactionHash)}
+                      {formatAddress(event.sender)}
+                    </td>
+                    <td>{event.blockNumber}</td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.transactionHash)}
                     </td>
                     <td className="text-sm opacity-70">
-                      {formatTimestamp(transfer.blockTimestamp)}
+                      {formatTimestamp(event.blockTimestamp)}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          {(!data?.ownershipTransferreds ||
-            data.ownershipTransferreds.length === 0) && (
+          {(!data?.roleGranteds || data.roleGranteds.length === 0) && (
             <div className="text-center py-8 opacity-60">
-              <p>No ownership transfers found</p>
+              <p>No roles granted found</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Roles Revoked */}
+      <div className="card bg-base-200 shadow-xl border border-base-300">
+        <div className="card-body p-8">
+          <h2 className="card-title text-3xl mb-6">🚫 Roles Revoked</h2>
+          <div className="overflow-x-auto">
+            <table className="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Account</th>
+                  <th>Sender</th>
+                  <th>Block</th>
+                  <th>Transaction</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data?.roleRevokeds?.map((event: any) => (
+                  <tr key={event.id}>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.role)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.account)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.sender)}
+                    </td>
+                    <td>{event.blockNumber}</td>
+                    <td className="font-mono text-sm">
+                      {formatAddress(event.transactionHash)}
+                    </td>
+                    <td className="text-sm opacity-70">
+                      {formatTimestamp(event.blockTimestamp)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {(!data?.roleRevokeds || data.roleRevokeds.length === 0) && (
+            <div className="text-center py-8 opacity-60">
+              <p>No roles revoked found</p>
             </div>
           )}
         </div>
@@ -207,7 +283,7 @@ export default function SubgraphData() {
                       {formatAddress(approval.spender)}
                     </td>
                     <td className="font-semibold">
-                      {(parseInt(approval.value) / 1e18).toFixed(4)}
+                      {(parseInt(approval.value) / 100).toFixed(2)} BTK
                     </td>
                     <td className="font-mono text-sm">
                       {formatAddress(approval.transactionHash)}
@@ -225,24 +301,34 @@ export default function SubgraphData() {
         </div>
       </div>
 
-      {/* EIP712 Domain Changed */}
+      {/* Role Admin Changed */}
       <div className="card bg-base-200 shadow-xl border border-base-300">
         <div className="card-body p-8">
-          <h2 className="card-title text-3xl mb-6">🔐 EIP712 Domain Changes</h2>
+          <h2 className="card-title text-3xl mb-6">🔐 Role Admin Changes</h2>
           <div className="overflow-x-auto">
             <table className="table table-zebra w-full">
               <thead>
                 <tr>
-                  <th>ID</th>
+                  <th>Role</th>
+                  <th>Previous Admin</th>
+                  <th>New Admin</th>
                   <th>Block</th>
                   <th>Transaction</th>
                   <th>Timestamp</th>
                 </tr>
               </thead>
               <tbody>
-                {data?.eip712DomainChangeds?.map((event: any) => (
+                {data?.roleAdminChangeds?.map((event: any) => (
                   <tr key={event.id}>
-                    <td className="font-mono text-sm">{event.id}</td>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.role)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.previousAdminRole)}
+                    </td>
+                    <td className="font-mono text-sm">
+                      {formatRole(event.newAdminRole)}
+                    </td>
                     <td>{event.blockNumber}</td>
                     <td className="font-mono text-sm">
                       {formatAddress(event.transactionHash)}
@@ -255,10 +341,9 @@ export default function SubgraphData() {
               </tbody>
             </table>
           </div>
-          {(!data?.eip712DomainChangeds ||
-            data.eip712DomainChangeds.length === 0) && (
+          {(!data?.roleAdminChangeds || data.roleAdminChangeds.length === 0) && (
             <div className="text-center py-8 opacity-60">
-              <p>No domain changes found</p>
+              <p>No role admin changes found</p>
             </div>
           )}
         </div>

@@ -27,14 +27,14 @@ graph init \
   --contract-name <CONTRACT_NAME>
 ```
 
-For example, if you have a contract deployed on a testnet:
+For example, for the BuenoToken contract deployed on Celo mainnet:
 
 ```bash
 graph init \
   --studio \
-  --from-contract 0x1234... \
-  --network sepolia \
-  --contract-name BuenaToken
+  --from-contract 0xCFA45ECA955dd195b5b5Fc0E40d1A1B06f16793C \
+  --network celo \
+  --contract-name BuenoToken
 ```
 
 ## Learn More

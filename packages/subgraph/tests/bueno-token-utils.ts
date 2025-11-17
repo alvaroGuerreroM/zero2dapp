@@ -5,7 +5,7 @@ import {
   EIP712DomainChanged,
   OwnershipTransferred,
   Transfer
-} from "../generated/BuenaToken/BuenaToken"
+} from "../generated/BuenoToken/BuenoToken"
 
 export function createApprovalEvent(
   owner: Address,
