@@ -13,7 +13,7 @@ export function Header() {
               <span className="text-2xl font-bold">Z</span>
             </div>
           </div>
-          <Link href="/" className="btn btn-ghost text-2xl font-bold normal-case">
+          <Link href="/" className="btn-ghost text-2xl font-bold normal-case">
             ZeroToDapp
           </Link>
         </div>

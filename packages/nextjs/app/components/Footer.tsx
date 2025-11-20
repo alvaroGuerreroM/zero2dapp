@@ -1,5 +1,3 @@
-import { ThemeToggle } from "./ThemeToggle";
-
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
@@ -23,12 +21,12 @@ export function Footer() {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-4">
               <a
-                href="https://nextjs.org/docs"
+                href="https://remix.ethereum.org/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link link-hover text-sm font-medium"
               >
-                Next.js
+                Remix
               </a>
               <a
                 href="https://thegraph.com/docs/"
@@ -39,26 +37,48 @@ export function Footer() {
                 The Graph
               </a>
               <a
-                href="https://wagmi.sh"
+                href="https://celo.org/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link link-hover text-sm font-medium"
               >
-                Wagmi
+                Celo
               </a>
               <a
-                href="https://www.rainbowkit.com"
+                href="https://chain.link/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link link-hover text-sm font-medium"
               >
-                RainbowKit
+                Chainlink
+              </a>
+              <a
+                href="https://ens.domains/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link link-hover text-sm font-medium"
+              >
+                ENS
+              </a>
+              <a
+                href="https://chain.link/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link link-hover text-sm font-medium"
+              >
+                Uniswap
+              </a>
+              <a
+                href="https://docs.self.xyz/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="link link-hover text-sm font-medium"
+              >
+                Self Protocol
               </a>
             </div>
 
             <div className="divider divider-horizontal"></div>
-
-            <ThemeToggle />
           </div>
         </div>
       </div>
