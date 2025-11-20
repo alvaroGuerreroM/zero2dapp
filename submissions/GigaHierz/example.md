@@ -1,0 +1,6 @@
+- Project name  
+- GitHub repo link  
+- Workshops integrated  
+- How to run  
+- Contact email  
+- (Optional: demo link)
