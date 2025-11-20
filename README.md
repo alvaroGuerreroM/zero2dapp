@@ -1,16 +1,17 @@
-# Zero to Dapp Devconnect Argentina
+# Zero to Dapp Devconnect Argentina - $100 up for grabs!!!
 
 This is the repo for Zero to Dapp, a workshop with seven sections:
 
 1. Remix
-2. The Graph(https://github.com/ryestew/zero2dapp/blob/self/THEGRAPH.md)
+2. [The Graph](https://github.com/ryestew/zero2dapp/blob/self/THEGRAPH.md)
 3. [Celo](https://github.com/ryestew/zero2dapp/blob/self/CELO.md) 
-4. Chainlink(https://github.com/ryestew/zero2dapp/blob/self/Chainlink.md)
-5. ENS(https://github.com/ryestew/zero2dapp/blob/self/ENS.md)
-6. Uniswap(https://github.com/ryestew/zero2dapp/blob/self/UNISWAP.md)
-7. Self Protocol(https://github.com/ryestew/zero2dapp/blob/self/SELF.md)
+4. [Chainlink](https://github.com/ryestew/zero2dapp/blob/self/Chainlink.md)
+5. [ENS](https://github.com/ryestew/zero2dapp/blob/self/ENS.md)
+6. [Uniswap](https://github.com/ryestew/zero2dapp/blob/self/UNISWAP.md)
+7. [Self Protocol](https://github.com/ryestew/zero2dapp/blob/self/SELF.md)
 
 Each section will have at least one branch. 
+
 When there is just one branch for a section, it will contain the finished work.  When there are two branches, the first one is for starting point and the second is will contain the finished work for that section.
 
 
