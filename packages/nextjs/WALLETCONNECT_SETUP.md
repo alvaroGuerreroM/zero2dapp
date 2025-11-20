@@ -44,5 +44,6 @@ By default, the app supports:
 - Arbitrum
 - Base
 - Sepolia (testnet)
+- Celo
 
 You can modify the supported chains in `app/providers.tsx`.

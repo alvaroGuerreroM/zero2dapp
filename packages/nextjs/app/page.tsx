@@ -72,8 +72,7 @@ export default function Page() {
                 <h3 className="card-title text-2xl mb-3">Multi-Chain</h3>
                 <p className="text-base opacity-70 leading-relaxed">
                   Supports Ethereum, Polygon, Arbitrum, Optimism, Base, Celo,
-                  and testnets including Sepolia, Celo Alfajores, and Celo
-                  Sepolia.
+                  and testnets including Celo Sepolia and Celo Mainnet.
                 </p>
               </div>
             </div>

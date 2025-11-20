@@ -10,7 +10,7 @@ import { Address, BigInt } from "@graphprotocol/graph-ts"
 import { Approval } from "../generated/schema"
 import { Approval as ApprovalEvent } from "../generated/BuenoToken/BuenoToken"
 import { handleApproval } from "../src/bueno-token"
-import { createApprovalEvent } from "./buena-token-utils"
+import { createApprovalEvent } from "./bueno-token-utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/subgraphs/developing/creating/unit-testing-framework/#tests-structure

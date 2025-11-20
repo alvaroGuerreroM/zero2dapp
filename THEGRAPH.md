@@ -202,21 +202,14 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 
-// ... (keep existing chain configurations: celo, celoAlfajores, celoSepolia)
+// ... (keep existing chain configurations: celo, celoSepolia)
 
 const wagmiConfig = getDefaultConfig({
   appName: "ZeroToDapp",
   projectId:
     process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || "YOUR_PROJECT_ID",
   chains: [
-    mainnet,
-    sepolia,
-    polygon,
-    optimism,
-    arbitrum,
-    base,
     celo,
-    celoAlfajores,
     celoSepolia,
   ],
   ssr: true,
